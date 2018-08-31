@@ -37,15 +37,15 @@ int FileRead (ifstream & SomeFile, float &floatA, float &floatB, float &floatC)
 
 }
 
-int CalculateRoot ()
+int CalculateRoot (float &floatA, float &floatB, float &floatC)
 {
-// (b2-4ac) < 0
+// (floatB *2 - 4 * floatA * FloatC) < 0
 // if OK
-return 0;
+  return 0;
 //no solution
-return -1;
+  return -1;
 //if complex roots
-return -2;
+  return -2;
 }
 void PrintOutput (float &floatA, float &floatB, float &floatC)
 {
