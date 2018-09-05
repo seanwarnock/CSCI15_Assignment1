@@ -1,0 +1,4 @@
+floatA    1 floatB    2 floatC    3
+floatA    1 floatB    2 floatC    5
+floatA    3 floatB    1 floatC    5
+floatA    3 floatB    1 floatC    5

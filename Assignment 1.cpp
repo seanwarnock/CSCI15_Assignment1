@@ -22,7 +22,7 @@ Write a program, broken into functions as specified below, to read the coefficie
 using namespace std;
 
 
-int FileRead (ifstream & SomeFile, float &floatA, float &floatB, float &floatC)
+int FileRead (ifstream &SomeFile, float &floatA, float &floatB, float &floatC)
 {
 //Need to identify if I read in three "good" values.
   if (SomeFile.eof())
@@ -32,6 +32,7 @@ int FileRead (ifstream & SomeFile, float &floatA, float &floatB, float &floatC)
   else
   {
     SomeFile >> floatA >> floatB >> floatC;
+
     return 0;
   }
 
@@ -47,9 +48,9 @@ int CalculateRoot (float &floatA, float &floatB, float &floatC)
 //if complex roots
   return -2;
 }
-void PrintOutput (float &floatA, float &floatB, float &floatC)
+void PrintOutput (ofstream &SomeOutFile, float floatA, float floatB, float floatC)
 {
-  cout << "floatA" << floatA << "floatB" << floatB << "floatC" << floatC << endl;
+  SomeOutFile << "floatA" << setw(5) << floatA << " floatB" << setw(5)  << floatB << " floatC" << setw(5)  << floatC << endl;
 }
 
 int main()
@@ -61,6 +62,7 @@ int main()
   float floatQuadC;
   short shortLooper = 0;
   ifstream inFile;
+  ofstream outFile;
 
 
 
@@ -70,25 +72,38 @@ int main()
   cout << "This program will calculate and print the roots of a quadratic equation." << endl;
   cout << "Please enter a file name in the local path to open. : ";
   cin >> stringInFileName;
+  cout << "Please enter a file name in the local path to write. : ";
+  cin >> stringOutFileName;
 
   inFile.open(stringInFileName);
-  if (inFile.is_open())
-  {
-    while (shortLooper < 2)
+  outFile.open(stringOutFileName);
+
+    if (!inFile.is_open())
     {
-    shortLooper = FileRead(inFile, floatQuadA, floatQuadB, floatQuadC);
+        cout << "Unable to open file " << stringInFileName;
+        exit(666);
+    }
+    if (!outFile.is_open())
+    {
+        cout << "Unable to open file " << stringOutFileName;
+        exit(666);
     }
 
 
-  }
-  else
-  {
-    cout << "Unable to open file " << stringInFileName;
-    exit(666);
-  }
-  inFile.close();
+    while (shortLooper < 2)
+    {
+        shortLooper = FileRead(inFile, floatQuadA, floatQuadB, floatQuadC);
+        PrintOutput(outFile, floatQuadA, floatQuadB, floatQuadC);
+    }
 
-  PrintOutput(floatQuadA, floatQuadB, floatQuadC);
+
+
+    inFile.close();
+    outFile.close();
+
+
+
+
 
   system("pause");
   //Read file  and confirm I actually opened file
