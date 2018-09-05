@@ -10,6 +10,7 @@ Write a program, broken into functions as specified below, to read the coefficie
 #include <string>
 #include <iomanip>
 #include <fstream>
+#include <math.h>
 #ifdef _WIN32
   #include <windows.h>
 #endif
@@ -21,23 +22,28 @@ Write a program, broken into functions as specified below, to read the coefficie
 
 using namespace std;
 
-
 int FileRead (ifstream &SomeFile, float &floatA, float &floatB, float &floatC)
 {
 //Need to identify if I read in three "good" values.
-  if (SomeFile.eof())
-  {
-    return 2;
-  }
-  else
-  {
-    SomeFile >> floatA >> floatB >> floatC;
 
+    floatA = NAN;
+    floatB = NAN;
+    floatC = NAN;
+
+    if (SomeFile.eof())
+    {
+        return 2;
+    }
+    else
+    {
+        SomeFile >> floatA >> floatB >> floatC;
+    }
+    if ((floatA == NAN) || (floatB == NAN) || (floatC == NAN))
+    {
+        return 1;
+    }
     return 0;
-  }
-
 }
-
 int CalculateRoot (float &floatA, float &floatB, float &floatC)
 {
 // (floatB *2 - 4 * floatA * FloatC) < 0
@@ -50,69 +56,65 @@ int CalculateRoot (float &floatA, float &floatB, float &floatC)
 }
 void PrintOutput (ofstream &SomeOutFile, float floatA, float floatB, float floatC)
 {
-  SomeOutFile << "floatA" << setw(5) << floatA << " floatB" << setw(5)  << floatB << " floatC" << setw(5)  << floatC << endl;
-}
+    static bool boolFirstRun = true;
 
+    if (boolFirstRun == true)
+    {
+        SomeOutFile << "Header!" << endl;
+    }
+    SomeOutFile << "floatA" << setw(5) << floatA << " floatB" << setw(5)  << floatB << " floatC" << setw(5)  << floatC << endl;
+    boolFirstRun = false;
+}
 int main()
 {
-  string stringInFileName = "";
-  string stringOutFileName = "";
-  float floatQuadA;
-  float floatQuadB;
-  float floatQuadC;
-  short shortLooper = 0;
-  ifstream inFile;
-  ofstream outFile;
+    string stringInFileName = "";
+    string stringOutFileName = "";
+    float floatQuadA;
+    float floatQuadB;
+    float floatQuadC;
+    short shortLooper = 0;
+    ifstream inFile;
+    ofstream outFile;
 
+    SetConsoleTitle(ASSIGNMENT);
+    system("cls");
+    cout << "This program will calculate and print the roots of a quadratic equation." << endl;
+    cout << "Please enter a file name in the local path to open. : ";
+    cin >> stringInFileName;
+    cout << "Please enter a file name in the local path to write. : ";
+    cin >> stringOutFileName;
 
-
-
-  SetConsoleTitle(ASSIGNMENT);
-  system("cls");
-  cout << "This program will calculate and print the roots of a quadratic equation." << endl;
-  cout << "Please enter a file name in the local path to open. : ";
-  cin >> stringInFileName;
-  cout << "Please enter a file name in the local path to write. : ";
-  cin >> stringOutFileName;
-
-  inFile.open(stringInFileName);
-  outFile.open(stringOutFileName);
+    inFile.open(stringInFileName);
+    outFile.open(stringOutFileName);
 
     if (!inFile.is_open())
     {
         cout << "Unable to open file " << stringInFileName;
-        exit(666);
+        exit(777);
     }
     if (!outFile.is_open())
     {
         cout << "Unable to open file " << stringOutFileName;
-        exit(666);
+        exit(888);
     }
 
-
+    shortLooper = FileRead(inFile, floatQuadA, floatQuadB, floatQuadC);
     while (shortLooper < 2)
     {
-        shortLooper = FileRead(inFile, floatQuadA, floatQuadB, floatQuadC);
-        PrintOutput(outFile, floatQuadA, floatQuadB, floatQuadC);
+        cout << "ShortLooper IS: " << shortLooper;
+        if (shortLooper == 1)
+        {
+            shortLooper = FileRead(inFile, floatQuadA, floatQuadB, floatQuadC);
+        }
+        else
+        {
+            CalculateRoot(floatQuadA, floatQuadB, floatQuadC);
+            PrintOutput(outFile, floatQuadA, floatQuadB, floatQuadC);
+            shortLooper = FileRead(inFile, floatQuadA, floatQuadB, floatQuadC);
+        }
     }
-
-
 
     inFile.close();
     outFile.close();
-
-
-
-
-
-  system("pause");
-  //Read file  and confirm I actually opened file
-
-  //Send to file read function and read a line
-
-  //Perform the root calculation
-
-
-  //output stuff.
-
+    system("pause");
 }
