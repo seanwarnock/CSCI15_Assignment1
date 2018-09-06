@@ -44,15 +44,31 @@ int FileRead (ifstream &SomeFile, float &floatA, float &floatB, float &floatC)
     }
     return 0;
 }
-int CalculateRoot (float &floatA, float &floatB, float &floatC)
+int CalculateRoot (double doubleA, double doubleB, double doubleC)
 {
+    double  root;
 // (floatB *2 - 4 * floatA * FloatC) < 0
 // if OK
-  return 0;
-//no solution
-  return -1;
-//if complex roots
-  return -2;
+    //
+
+    if (doubleA == 0)
+    {
+        //no solution
+        return -1;
+    }
+    else if (((doubleB * doubleB)-4 * doubleA * doubleC) < 0)
+    {
+        //if complex roots
+        return -2;
+    }
+    else
+    {
+        root = (-1 * doubleB) - sqrt((doubleB*doubleB) - 4 * doubleA * doubleC)/2 * doubleA;
+        cout << "Root negative : " << root << endl;
+        root = (-1 * doubleB) + sqrt((doubleB*doubleB) - 4 * doubleA * doubleC)/2 * doubleA;
+        cout << "Root positive : " << root << endl;
+        return 0;
+    }
 }
 void PrintOutput (ofstream &SomeOutFile, float floatA, float floatB, float floatC)
 {
