@@ -22,7 +22,7 @@ Write a program, broken into functions as specified below, to read the coefficie
 
 using namespace std;
 
-int FileRead (ifstream &SomeFile, float &floatA, float &floatB, float &floatC)
+int FileRead (ifstream &SomeFile, double &floatA, double &floatB, double &floatC)
 {
 //Need to identify if I read in three "good" values.
 
@@ -38,18 +38,21 @@ int FileRead (ifstream &SomeFile, float &floatA, float &floatB, float &floatC)
     {
         SomeFile >> floatA >> floatB >> floatC;
     }
-    if ((floatA == NAN) || (floatB == NAN) || (floatC == NAN))
+    //verify if we got a number
+    if (isnan(floatA) || isnan(floatB) || isnan(floatC))
     {
         return 1;
     }
-    return 0;
+    else
+    {
+        return 0;
+    }
 }
-int CalculateRoot (double doubleA, double doubleB, double doubleC)
+int CalculateRoot (double doubleA, double doubleB, double doubleC, double &doublePosRoot, double &doubleNegRoot)
 {
-    double  root;
-// (floatB *2 - 4 * floatA * FloatC) < 0
-// if OK
-    //
+    double holder;
+    double bottum;
+    double thesquare;
 
     if (doubleA == 0)
     {
@@ -63,31 +66,68 @@ int CalculateRoot (double doubleA, double doubleB, double doubleC)
     }
     else
     {
-        root = (-1 * doubleB) - sqrt((doubleB*doubleB) - 4 * doubleA * doubleC)/2 * doubleA;
-        cout << "Root negative : " << root << endl;
-        root = (-1 * doubleB) + sqrt((doubleB*doubleB) - 4 * doubleA * doubleC)/2 * doubleA;
-        cout << "Root positive : " << root << endl;
+//        cout << "doublB times -1: ";
+//        cout << (-1 * doubleB) << endl;
+        holder = pow(doubleB,2) - 4 * doubleA * doubleC;
+//        cout << "holder value: " << holder << endl;
+        bottum = double(2) * doubleA;
+//        cout << "calculated bottum value : " << bottum << endl;
+        thesquare = sqrt(holder);
+//        cout << "Square root is : " << thesquare << endl;
+        doublePosRoot = (-doubleB + thesquare)/bottum;
+//        cout << "Root positive : " << root << endl;
+
+
+        holder = pow(doubleB,2) - 4 * doubleA * doubleC;
+        bottum = double(2) * doubleA;
+        thesquare = sqrt(holder);
+        doubleNegRoot = (-doubleB - thesquare)/bottum;
+
+        //Does not work correctly but this is the base equation attempt.
+        //root = (-doubleB - sqrt((doubleB*doubleB) - 4 * doubleA * doubleC)/2 * doubleA;
+
         return 0;
     }
 }
-void PrintOutput (ofstream &SomeOutFile, float floatA, float floatB, float floatC)
+void PrintOutput (ofstream &SomeOutFile, double floatA, double floatB, double floatC, double doublePosRoot, double doubleNegRoot, int intCalcStatus)
 {
     static bool boolFirstRun = true;
+    int shortspace = 10;
+    int longspace = 15;
 
     if (boolFirstRun == true)
     {
-        SomeOutFile << "Header!" << endl;
+        cout << endl;
+        cout << setw(shortspace) << "A value" << setw(shortspace) << "B value" << setw(shortspace) << "C value" << setw(longspace) << "Positive root" << setw(longspace) << "Negative root" << endl;
+        SomeOutFile << setw(shortspace) << "A value" << setw(shortspace) << "B value" << setw(shortspace) << "C value" << setw(longspace) << "Positive root" << setw(longspace) << "Negative root" << endl;
     }
-    SomeOutFile << "floatA" << setw(5) << floatA << " floatB" << setw(5)  << floatB << " floatC" << setw(5)  << floatC << endl;
+    if (intCalcStatus == 0)
+    {
+        cout << setw(shortspace) << floatA  << setw(shortspace)  << floatB << setw(shortspace)  << floatC << setw(longspace) << doublePosRoot << setw(longspace) << doubleNegRoot << endl;
+        SomeOutFile << setw(shortspace) << floatA  << setw(shortspace)  << floatB << setw(shortspace)  << floatC << setw(longspace) << doublePosRoot << setw(longspace) << doubleNegRoot << endl;
+    }
+    else if (intCalcStatus == -1)
+    {
+        cout << setw(shortspace) << floatA  << setw(shortspace)  << floatB << setw(shortspace)  << floatC << setw(longspace) << "no solution" << setw(longspace) << "no solution" << endl;
+        SomeOutFile << setw(shortspace) << floatA  << setw(shortspace)  << floatB << setw(shortspace)  << floatC << setw(longspace) << "no solution" << setw(longspace) << "no solution" << endl;
+    }
+    else if (intCalcStatus == -2)
+    {
+        cout << setw(shortspace) << floatA  << setw(shortspace)  << floatB << setw(shortspace)  << floatC << setw(longspace) << "complex root" << setw(longspace) << "complex root" << endl;
+        SomeOutFile << setw(shortspace) << floatA  << setw(shortspace)  << floatB << setw(shortspace)  << floatC << setw(longspace) << "complex root" << setw(longspace) << "complex root" << endl;
+    }
+
     boolFirstRun = false;
 }
 int main()
 {
     string stringInFileName = "";
     string stringOutFileName = "";
-    float floatQuadA;
-    float floatQuadB;
-    float floatQuadC;
+    double floatQuadA;
+    double floatQuadB;
+    double floatQuadC;
+    double doublePositiveRoot;
+    double doubleNegativeRoot;
     short shortLooper = 0;
     ifstream inFile;
     ofstream outFile;
@@ -118,19 +158,21 @@ int main()
     while (shortLooper < 2)
     {
         cout << "ShortLooper IS: " << shortLooper;
-        if (shortLooper == 1)
+        cout << " values: " << floatQuadA << " " << floatQuadB << " " << floatQuadC;
+        if (shortLooper == 0)
         {
+            shortLooper = CalculateRoot(floatQuadA, floatQuadB, floatQuadC, doublePositiveRoot, doubleNegativeRoot);
+            cout << " Entered output shortlooper : "  << shortLooper << endl;
+            PrintOutput(outFile, floatQuadA, floatQuadB, floatQuadC, doublePositiveRoot, doubleNegativeRoot, shortLooper);
             shortLooper = FileRead(inFile, floatQuadA, floatQuadB, floatQuadC);
         }
         else
         {
-            CalculateRoot(floatQuadA, floatQuadB, floatQuadC);
-            PrintOutput(outFile, floatQuadA, floatQuadB, floatQuadC);
+            cout << " Entered skip" << endl;
             shortLooper = FileRead(inFile, floatQuadA, floatQuadB, floatQuadC);
         }
     }
 
     inFile.close();
     outFile.close();
-    system("pause");
 }
