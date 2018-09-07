@@ -56,16 +56,18 @@ int CalculateRoot (double doubleA, double doubleB, double doubleC, double &doubl
 
     if (doubleA == 0)
     {
-        //no solution
+        //no solution available return -1 and exit.
         return -1;
     }
     else if (((doubleB * doubleB)-4 * doubleA * doubleC) < 0)
     {
-        //if complex roots
+        //if complex roots return -2 and exit.
         return -2;
     }
     else
     {
+
+        //Perform the actual calculation for roots.
 //        cout << "doublB times -1: ";
 //        cout << (-1 * doubleB) << endl;
         holder = pow(doubleB,2) - 4 * doubleA * doubleC;
@@ -154,25 +156,24 @@ int main()
         exit(888);
     }
 
+    outFile << "Input File: " << stringInFileName << endl;
+    outFile << "Output File: " << stringOutFileName << endl;
+
+    //Time to loop through the file line by line.
     shortLooper = FileRead(inFile, floatQuadA, floatQuadB, floatQuadC);
     while (shortLooper < 2)
     {
-        cout << "ShortLooper IS: " << shortLooper;
-        cout << " values: " << floatQuadA << " " << floatQuadB << " " << floatQuadC;
         if (shortLooper == 0)
         {
             shortLooper = CalculateRoot(floatQuadA, floatQuadB, floatQuadC, doublePositiveRoot, doubleNegativeRoot);
-            cout << " Entered output shortlooper : "  << shortLooper << endl;
             PrintOutput(outFile, floatQuadA, floatQuadB, floatQuadC, doublePositiveRoot, doubleNegativeRoot, shortLooper);
             shortLooper = FileRead(inFile, floatQuadA, floatQuadB, floatQuadC);
         }
         else
         {
-            cout << " Entered skip" << endl;
             shortLooper = FileRead(inFile, floatQuadA, floatQuadB, floatQuadC);
         }
     }
-
     inFile.close();
     outFile.close();
 }

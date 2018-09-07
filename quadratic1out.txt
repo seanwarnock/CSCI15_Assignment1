@@ -1,0 +1,7 @@
+Input File: quadratic1.txt
+Output File: quadratic1out.txt
+   A value   B value   C value  Positive root  Negative root
+         1         1         1   complex root   complex root
+       1.2      -2.3       0.4        1.72323       0.193435
+        -2        -3        -4   complex root   complex root
+         0        -2      8.85    no solution    no solution

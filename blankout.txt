@@ -1,0 +1,2 @@
+Input File: blank.txt
+Output File: blankout.txt

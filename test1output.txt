@@ -1,0 +1,9 @@
+Input File: test1.txt
+Output File: test1output.txt
+   A value   B value   C value  Positive root  Negative root
+      0.25        -2         3              6              2
+         1         2         3   complex root   complex root
+         1         2         0              0             -2
+         5         3         1   complex root   complex root
+         8         6        75   complex root   complex root
+        -1        -4         5             -5              1
